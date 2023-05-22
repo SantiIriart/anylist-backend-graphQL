@@ -1,0 +1,135 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: ID!
+  fullName: String!
+  email: String!
+  roles: [String!]!
+  isActive: Boolean!
+  lastUpdateBy: User
+  itemCount: Int!
+  items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
+  listCount: Int!
+  lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
+}
+
+type List {
+  id: ID!
+  name: String!
+  user: User!
+  items(offset: Int = 0, limit: Int = 10, search: String): [ListItem!]!
+  totalItems: Float!
+}
+
+type ListItem {
+  id: ID!
+  quantity: Float!
+  completed: Boolean!
+  list: Item!
+  item: Item!
+}
+
+type Item {
+  id: ID!
+  name: String!
+  quantityUnits: String
+  user: User!
+  listItem: [ListItem!]!
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
+type Query {
+  items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
+  item(id: ID!): Item!
+  users(roles: [ValidRoles!] = [], offset: Int = 0, limit: Int = 10, search: String): [User!]!
+  user(id: ID!): User!
+  lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
+  list(id: String!): List!
+  listItem(id: String!): ListItem!
+  revalidate: AuthResponse!
+}
+
+enum ValidRoles {
+  admin
+  user
+  superUser
+}
+
+type Mutation {
+  createItem(createItemInput: CreateItemInput!): Item!
+  updateItem(updateItemInput: UpdateItemInput!): Item!
+  removeItem(id: String!): Item!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  blockuser(id: ID!): User!
+  createList(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: String!): List!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
+  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
+  signup(signupInput: SignupInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
+
+  """Ejecuta la constucción de la semilla de datos"""
+  executeSeed: Boolean!
+}
+
+input CreateItemInput {
+  name: String!
+  quantityUnits: String
+}
+
+input UpdateItemInput {
+  name: String
+  quantityUnits: String
+  id: ID!
+}
+
+input UpdateUserInput {
+  email: String
+  fullName: String
+  password: String
+  id: ID!
+  isActive: Boolean
+  roles: [ValidRoles!]
+}
+
+input CreateListInput {
+  name: String!
+}
+
+input UpdateListInput {
+  name: String
+  id: ID!
+}
+
+input CreateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID!
+  itemId: ID!
+}
+
+input UpdateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID
+  itemId: ID
+  id: ID!
+}
+
+input SignupInput {
+  email: String!
+  fullName: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
